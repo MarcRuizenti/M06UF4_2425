@@ -1,8 +1,3 @@
-
-
-
-
-
 const PORT=7777;
 
 let http = require('http');
@@ -20,6 +15,14 @@ let http_server = http.createServer(function (request, response) {
 let ws_server = new ws.Server({server: http_server});
 
 let player1, player2;
+let viwers = [];
+
+function sendViewers(info) {
+
+	viwers.forEach(function(viewer) {
+  	viewer.send(JSON.stringify(info));
+	});
+}
 
 ws_server.on('connection', function(conn){
 
@@ -53,6 +56,10 @@ ws_server.on('connection', function(conn){
 			}
 			else if (info.by != null){
 				player2.send(JSON.stringify(info));
+
+				viwers.forEach(function(viewer) {
+    				viewer.send(JSON.stringify(info));
+				});
 			}
 			else if (info.s1 != null){
 					
@@ -94,11 +101,11 @@ ws_server.on('connection', function(conn){
 	
 		player2.send( JSON.stringify(info) );
 		setTimeout(function(){
-		let data = {game_start: true};
+			let data = {game_start: true};
 
-		player1.send(JSON.stringify(data));
-		player2.send(JSON.stringify(data));
-		
+			player1.send(JSON.stringify(data));
+			player2.send(JSON.stringify(data));
+			sendViewers(data);	
 		}, 500);
 
 		player2.on('close', function(){
@@ -121,5 +128,14 @@ ws_server.on('connection', function(conn){
 				player1.send(JSON.stringify(info));
 			}
 		});
+	}
+	else{
+
+		let info ={
+			player_num: 3
+		};
+		conn.send(JSON.stringify(info));
+		viwers.push(conn);
+		
 	}
 });

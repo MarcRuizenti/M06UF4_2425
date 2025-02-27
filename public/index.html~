@@ -20,23 +20,20 @@ let player1_points = 0, player2_points = 0;
 ws.onmessage = function (msg){
 	let data = JSON.parse(msg.data);
 
-	if (data.player_num != null){
+	if (data.player_num != null)
 		player_num = data.player_num;
-		if (player_num == 3){
-			game_start = false;
-		}	
-	}
 	else if (data.y != null){
 		if (player_num == 1){
 			player2.y = data.y;
 		}
 		else if (player_num == 2) {	
 			player1.y = data.y;
-		}
+		}	
 	}
 	else if (data.by != null){
+		
 			ball_pos = {x: data.bx, y: data.by};
-				
+		
 	}
 	else if (data.s1 != null){
 		
@@ -62,8 +59,6 @@ ws.onmessage = function (msg){
 		}
 	}
 	else if (data.game_start != null){
-		
-		console.log("start");
 		game_start = false;
 	}
 	else if (data.dis != null)
@@ -166,18 +161,14 @@ function update ()
 		winText.setColor('#00FFFF');
 		winText.visible = true;
 
-		console.log("no dis");
 		return;
 	}
 	if (game_start){
-		console.log("no start");
 		return;
 	}
 
-	if (player_num == 0){
-		console.log("no num");
+	if (player_num == 0)
 		return;
-		}
 	if (game_over)
 	{
 		if (win)
@@ -189,7 +180,6 @@ function update ()
 			losText.visible = true;
 		}
 
-		console.log("no");
 		return;
 	}
 	if (player_num == 1){
@@ -230,11 +220,6 @@ function update ()
 
 	}	
 	else if (player_num == 2){
-		ball.x = ball_pos.x;
-		ball.y = ball_pos.y;		
-	}
-	else if (player_num == 3){
-		console.log(ball);
 		ball.x = ball_pos.x;
 		ball.y = ball_pos.y;		
 	}
