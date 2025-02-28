@@ -8,6 +8,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.87.0/phaser.min.js"></script>
 
 <script>
+let player1Pos={};
+let player2Pos={};
 let game_start = true;
 let ball_pos = {};
 let player1, player2;
@@ -70,6 +72,20 @@ ws.onmessage = function (msg){
 	{
 		dis = true;
 		num_dis = data.dis;
+	}
+	else if (data.p1y != null)
+	{
+		player1Pos = {y: data.p1y};	
+	}
+	else if (data.p2y != null)
+	{
+		player2Pos = {y: data.p2y};
+	}
+	else if (data.text != null)
+	{
+		
+		winText.setText(data.text);
+		winText.visible = true;
 	}
 };
 let win_w=800, win_h=450;
@@ -234,9 +250,10 @@ function update ()
 		ball.y = ball_pos.y;		
 	}
 	else if (player_num == 3){
-		console.log(ball);
 		ball.x = ball_pos.x;
 		ball.y = ball_pos.y;		
+		player1.y = player1Pos.y;
+		player2.y = player2Pos.y;
 	}
 
 
@@ -262,8 +279,7 @@ function update ()
 	else if (player_num == 2){
 		player_pos.y = player2.y;
 	}	
-	
-	ws.send( JSON.stringify(player_pos) );
+	if (player_num != 3)ws.send( JSON.stringify(player_pos) );
 
 }
 

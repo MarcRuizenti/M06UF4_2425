@@ -42,6 +42,7 @@ ws_server.on('connection', function(conn){
 				let data = {dis: 1};
 
 				player2.send(JSON.stringify(data));
+				sendViewers(data);	
 			}
 		});
 
@@ -52,6 +53,13 @@ ws_server.on('connection', function(conn){
 			let info = JSON.parse(msg);
 			if (info.y != null){
 				player2.send(JSON.stringify(info));
+
+				let data = {
+					p1y: info.y
+				}
+				
+				sendViewers(data);	
+
 			}
 			else if (info.by != null){
 				player2.send(JSON.stringify(info));
@@ -63,26 +71,31 @@ ws_server.on('connection', function(conn){
 			else if (info.s1 != null){
 					
 				player2.send(JSON.stringify(info));
-
+				sendViewers(info);	
+				
 				if (info.s1 >= 3 || info.s2 >= 3){
 					
 					let data;
-
+					let dataV;
 					if (info.s1 < info.s2){
 						data = {
 							game_over: true,
 							win: 2 
 						};	
+
+						dataV = {text: "Win Player2"};
 					}
 					else{
 						data = {
 							game_over: true,
 							win: 1 
 						};	
+						dataV = {text: "Win Player1"};
 						
 					}
 
-					
+					sendViewers(dataV);	
+							
 					player1.send(JSON.stringify(data));
 					player2.send(JSON.stringify(data));
 				}
@@ -104,8 +117,7 @@ ws_server.on('connection', function(conn){
 
 			player1.send(JSON.stringify(data));
 			player2.send(JSON.stringify(data));
-			sendViewers(data);	
-		}, 500);
+		}, 3000);
 
 		player2.on('close', function(){
 			player2 = null;
@@ -114,6 +126,7 @@ ws_server.on('connection', function(conn){
 				data = {dis: 2};
 
 				player1.send(JSON.stringify(data));
+				sendViewers(data);	
 			}
 		});
 		player2.on('message', function (msg){
@@ -125,6 +138,13 @@ ws_server.on('connection', function(conn){
 			
 			if (info.y != null){
 				player1.send(JSON.stringify(info));
+				let data = {
+
+					p2y: info.y
+				}
+				
+				sendViewers(data);	
+
 			}
 		});
 	}
